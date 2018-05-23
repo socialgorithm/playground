@@ -1,5 +1,5 @@
 from tkinter import *
-from src.trackGen.track import Track
+from track.trackGen.track import Track
 
 
 # colors
@@ -19,7 +19,7 @@ class trackGen:
         self.root.mainloop()
 
     def genTrack(self,loop=True):
-        track = Track(self.window_size, numberOfPoints=25)
+        track = Track(self.window_size)
         self.displayTrack(track)
         if loop:
             self.root.after(100,self.genTrack)
@@ -28,7 +28,8 @@ class trackGen:
     def displayTrack(self,track):
         self.canvas.create_rectangle(0,0,self.window_size[0],self.window_size[1], fill=black)
         # drawing the points used to generate track
-        for point in track.randomPoints:
+        for point in track.track_points:
+            # +/- 2 increase the size of the points that are drawn
             x1, y1 = int(point.x - 2), int(point.y - 2)
             x2, y2 = int(point.x + 2), int(point.y + 2)
             if point == track.startingPoint:
