@@ -27,16 +27,16 @@ class Track:
         # expanding to window size
         self._resizeTrack()
         # smoothing
-        self._smooth()
+        self.track_points = self._smooth(self.track_points)
 
-    def _smooth(self):
-        return # TODO NOT IMPLEMENTED CORRECTLY YET
-        new_points = [0 for i in range(len(self.track_points)*2-2)]
-        for index1 in range(0,len(self.track_points)*2-2,2):
+    @staticmethod
+    def _smooth(track_points):
+        new_points = [0 for i in range(len(track_points)*2)]
+        for index1 in range(0,len(new_points), 2):
             index2 = index1 + 2
             mid_point_index = index1 + 1
-            point1 = self.track_points[int(index1/2)]
-            point2 = self.track_points[int(index2/2)]
+            point1 = track_points[int(index1/2)]
+            point2 = track_points[int(index2/2)]
             if point1.x > point2.x:
                 mid_point_x = point1.x - point2.x
             elif point1.x < point2.x:
@@ -47,7 +47,7 @@ class Track:
                 mid_point_y = point2.y - point1.y
             new_points[index1] = point1
             new_points[mid_point_index] = sy.Point2D(mid_point_x, mid_point_y)
-        self.track_points = new_points
+        return new_points
 
     def _generateRandomPoints(self):
         self.randomPoints.clear()
