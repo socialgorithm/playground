@@ -15,6 +15,9 @@ class Track:
         # checking for intersections
         hasIntersections = self.hasIntersections()
         toFewLines = len(self.track_lines) < minLines
+        # smoothing
+        self.track_points = self.add_midpoints(self.track_points)
+        self.track_points = self.distort(self.track_points)
         while hasIntersections or toFewLines:
             if toFewLines:
                 print("Too few lines ({})!".format(minLines))
@@ -22,15 +25,17 @@ class Track:
                 print("Track has intersections!")
             self._generateRandomPoints()
             self._generateConvexHull()
+            # smoothing
+            self.track_points = self.add_midpoints(self.track_points)
+            self.track_points = self.distort(self.track_points)
+            # intersections
             hasIntersections = self.hasIntersections()
             toFewLines = len(self.track_lines) < minLines
         # expanding to window size
         self._resizeTrack()
-        # smoothing
-        self.track_points = self._smooth(self.track_points)
 
     @staticmethod
-    def _smooth(track_points):
+    def add_midpoints(track_points):
         new_points = [0 for i in range(len(track_points)*2-1)]
         for index1 in range(0,len(new_points), 2):
             index2 = index1 + 2
@@ -50,6 +55,30 @@ class Track:
                 mid_point_y = point1.y + (point2.y - point1.y)/2
             new_points[index1] = point1
             new_points[mid_point_index] = sy.Point2D(mid_point_x, mid_point_y)
+        return new_points
+
+    @staticmethod
+    def distort(track_points):
+        new_points = []
+        for index,point in enumerate(track_points):
+            if index == 0 or index+1 == len(track_points):
+                new_points.append(point)
+                continue
+            prev_point = track_points[index-1]
+            next_point = track_points[index+1]
+            # bounding box
+            box_min_x = prev_point.x if prev_point.x < next_point.x else next_point.x
+            box_max_x = prev_point.x if prev_point.x > next_point.x else next_point.x
+            delta_x = box_max_x - box_min_x
+            box_min_y = prev_point.y if prev_point.y < next_point.y else next_point.y
+            box_max_y = prev_point.y if prev_point.y > next_point.y else next_point.y
+            delta_y = box_max_y - box_min_y
+            # random distortion
+            distortion_perc = 0.25
+            max_distortion_x = distortion_perc*delta_x if rand.random() >= 0.5 else -distortion_perc*delta_x
+            max_distortion_y = distortion_perc*delta_y if rand.random() >= 0.5 else -distortion_perc*delta_y
+            new_point = sy.Point2D(point.x+max_distortion_x, point.y+max_distortion_y)
+            new_points.append(new_point)
         return new_points
 
     def _generateRandomPoints(self):
