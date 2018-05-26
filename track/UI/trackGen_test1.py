@@ -44,8 +44,8 @@ class trackGen:
                 continue
             current_point = track.track_points[index]
             previous_point = track.track_points[index - 1]
-            x1, y1 = previous_point.x, previous_point.y
-            x2, y2 = current_point.x, current_point.y
+            x1, y1 = int(previous_point.x), int(previous_point.y)
+            x2, y2 = int(current_point.x), int(current_point.y)
             if first:
                 self.canvas.create_line(x1, y1, x2, y2, fill=green, width=2)
                 first = False

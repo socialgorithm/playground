@@ -31,20 +31,23 @@ class Track:
 
     @staticmethod
     def _smooth(track_points):
-        new_points = [0 for i in range(len(track_points)*2)]
+        new_points = [0 for i in range(len(track_points)*2-1)]
         for index1 in range(0,len(new_points), 2):
             index2 = index1 + 2
             mid_point_index = index1 + 1
             point1 = track_points[int(index1/2)]
+            if index2 >= len(new_points):
+                new_points[index1] = point1
+                break
             point2 = track_points[int(index2/2)]
-            if point1.x > point2.x:
-                mid_point_x = point1.x - point2.x
+            if point1.x >= point2.x:
+                mid_point_x = point2.x + (point1.x - point2.x)/2
             elif point1.x < point2.x:
-                mid_point_x = point2.x - point1.x
-            if point1.y > point2.y:
-                mid_point_y = point1.y - point2.y
+                mid_point_x = point1.x + (point2.x - point1.x)/2
+            if point1.y >= point2.y:
+                mid_point_y = point2.y + (point1.y - point2.y)/2
             elif point1.y < point2.y:
-                mid_point_y = point2.y - point1.y
+                mid_point_y = point1.y + (point2.y - point1.y)/2
             new_points[index1] = point1
             new_points[mid_point_index] = sy.Point2D(mid_point_x, mid_point_y)
         return new_points
