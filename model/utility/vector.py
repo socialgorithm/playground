@@ -11,26 +11,26 @@ class Vector:
         self.rad = None
 
     def setXY(self, x, y):
-        self.x = x
-        self.y = y
-        self.mag = (x**2 + y**2)**(1/2)
-        self.rad = math.atan2(y, x)
+        self.x = int(x)
+        self.y = int(y)
+        self.mag = (self.x**2 + self.y**2)**(1/2)
+        self.rad = math.atan2(self.y, self.x)
         self.deg = self.rad * (180/math.pi)
         return self
 
     def setMagDeg(self, mag, deg):
         if mag <= 0:
             raise ValueError("magnitude cannot be <= 0")
-        self.mag = mag
-        self.deg = deg
+        self.mag = float(mag)
+        self.deg = float(deg)
         if self.deg > 0:
-            _num = math.floor(deg / 360)
+            _num = math.floor(self.deg / 360)
             self.deg -= _num*360
         elif self.deg < 0:
-            self.deg += math.floor(math.fabs(deg)/360)*360
+            self.deg += math.floor(math.fabs(self.deg)/360)*360
         self.rad = self.deg * (math.pi / 180)
-        self.x = mag * math.cos(self.rad)
-        self.y = mag * math.sin(self.rad)
+        self.x = self.mag * math.cos(self.rad)
+        self.y = self.mag * math.sin(self.rad)
         return self
 
     def addDeg(self, deg):

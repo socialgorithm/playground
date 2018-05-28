@@ -36,5 +36,5 @@ class SimUI:
 
 
 if __name__ == "__main__":
-    sim = SimUI(5)
+    sim = SimUI(25)
     sim.run()
