@@ -1,6 +1,6 @@
 import random
 import tkinter
-
+import math
 from sympy import *
 import numpy as np
 from model.brain import InsectBrain
@@ -38,10 +38,9 @@ class Insect:
 
     def update(self, food_coords: list ):
         # check if intersecting food coordinates
-        #insect_body = Ellipse(Point(self.position.x, self.position.y), hradius=10, vradius=10)
         food_to_remove = []
         for food in food_coords:
-            #intersects = insect_body.encloses_point(food) #TODO buggy, issues with thread lock
+            # approximating insect body as a square, cannot use sympy due to bug
             intersects = False
             if (self.position.x - 5) <= food.x <= (self.position.x + 5):
                 if (self.position.y - 5) <= food.y <= (self.position.y + 5):
@@ -52,8 +51,30 @@ class Insect:
                 food_to_remove.append(food)
         for to_remove in food_to_remove:
             food_coords.remove(to_remove)
+        # sensors
+        sensor_input = [0, 0, 0, 0, 0]
+        SENSOR_RANGE = 30
+        for food in food_coords:
+            delta_x = food.x - self.position.x
+            delta_y = food.y - self.position.y
+            vec_to_food = Vector()
+            vec_to_food.setXY(delta_x, delta_y)
+            if vec_to_food.mag > SENSOR_RANGE:
+                continue
+            angle = self.vector.clockwiseAngleDeg(vec_to_food)
+            sensor_val = SENSOR_RANGE - vec_to_food.mag/SENSOR_RANGE
+            if 270 >= angle < 315:
+                sensor_input[0] += sensor_val
+            elif 315 >= angle < 337.5:
+                sensor_input[1] += sensor_val
+            elif 337.5 >= angle < 360 or 0 >= angle < 22.5:
+                sensor_input[2] += sensor_val
+            elif 22.5 >= angle < 45:
+                sensor_input[3] += sensor_val
+            elif 45 >= angle < 90:
+                sensor_input[4] += sensor_val
         # vector
-        steering = self.brain.evaluate(np.array([fran(), fran(), fran(), fran(), fran()]).reshape(1, 5))
+        steering = self.brain.evaluate(np.array(sensor_input).reshape(1, 5))
         delta_angle = 10*steering
         self.vector.addDeg(delta_angle)
         # updating position

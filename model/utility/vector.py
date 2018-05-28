@@ -11,7 +11,12 @@ class Vector:
         self.rad = None
 
     def setXY(self, x, y):
-        raise Exception("Not implemented")
+        self.x = x
+        self.y = y
+        self.mag = math.sqrt(x**2 + y**2)
+        self.rad = math.atan2(y, x)
+        self.deg = self.rad * (180/math.pi)
+        return self
 
     def setMagDeg(self, mag, deg):
         if mag <= 0:
@@ -31,3 +36,9 @@ class Vector:
     def addDeg(self, deg):
         self.deg += deg
         self.setMagDeg(self.mag, self.deg)
+
+    def clockwiseAngleDeg(self, vec2: 'Vector'):
+        dot = self.x * vec2.x + self.y * vec2.y  # dot product between [x1, y1] and [x2, y2]
+        det = self.x * vec2.y - self.y * vec2.x  # determinant
+        angle = math.atan2(det, dot) * (180/math.pi)
+        return angle
