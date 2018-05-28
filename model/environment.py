@@ -5,6 +5,7 @@ from threading import Thread
 import sympy as sy
 from model.utility.vector import Vector
 from model.insect import Insect
+from sympy.core.cache import *
 
 
 class Environment:
@@ -16,8 +17,11 @@ class Environment:
         self.food = []
         self.insects = []
         self.generateFood(num_food, width, height)
-        self.firstDrawCall = True
+        self.drawCall = 0
+        self.callsBeforeRefresh = 100
         self.food_to_remove = []
+        self.food_canvas_ids = []
+        self.simStep = 0
 
     def generateFood(self, num_food, width, height):
         self.food.clear()
@@ -27,7 +31,7 @@ class Environment:
             point = None
             while True:
                 coords = (random.randrange(0, width), random.randrange(0, height))
-                point = sy.Point(coords[0], coords[1])
+                point = sy.Point(coords[0], coords[1], evaluate=False)
                 if coords not in seenCoords:
                     seenCoords.append(coords)
                     self.food.append(point)
@@ -37,7 +41,7 @@ class Environment:
         self.insects.clear()
         self.insects.extend(insects)
         # setting starting point and vector
-        startingPoint = sy.Point(int(self.width/2), int(self.height/2))
+        startingPoint = sy.Point(int(self.width/2), int(self.height/2), evaluate=False)
         for insect in self.insects:
             insect.position = startingPoint
             insect.vector = Vector().setMagDeg(5, random.randrange(0, 360))
@@ -62,6 +66,8 @@ class Environment:
         for thread in threads:
             thread.join()
         self.draw(canvas)
+        print("Step: {}".format(self.simStep))
+        self.simStep += 1
 
 
     def updateInsects(self, insects: list, num_steps):
@@ -70,15 +76,18 @@ class Environment:
                 insect.update(self.food)
 
     def draw(self, canvas: tkinter.Canvas):
-        if self.firstDrawCall:
-            canvas.create_rectangle(0, 0, self.width, self.height, fill='black', width=0)
-            self.firstDrawCall = False
+        if self.drawCall <= 0:
+            for id in self.food_canvas_ids:
+                canvas.delete(id)
             for food in self.food:
                 x0, y0 = food.x - 1, food.y - 1
                 x1, y1 = food.x + 1, food.y + 1
-                canvas.create_oval(x0, y0, x1, y1, fill='green', width=0)
-        for insect in self.insects:
-            insect.undraw(canvas)
+                self.food_canvas_ids.append(canvas.create_oval(x0, y0, x1, y1, fill='green', width=0))
+            self.drawCall = self.callsBeforeRefresh
+        else:
+            self.drawCall -= 1
+        # for insect in self.insects:
+        #     insect.undraw(canvas)
         for insect in self.insects:
             insect.draw(canvas)
 

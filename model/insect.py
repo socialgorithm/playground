@@ -17,6 +17,8 @@ class Insect:
         self.vector = None
         self.brain: InsectBrain = None
         self.fitness = 0
+        self.canvas_sphere = None
+        self.canvas_line = None
         # create random genome
         if genGenome:
             self.genome = Genome()
@@ -97,21 +99,26 @@ class Insect:
         self.position = Point(int(self.position.x) + int(self.vector.x), int(self.position.y) + int(self.vector.y))
 
 
-    def undraw(self, canvas: tkinter.Canvas):
-        if self.prevPosition is None:
-            return
-        x0, y0 = int(self.prevPosition.x) - 5, int(self.prevPosition.y) - 5
-        x1, y1 = int(self.prevPosition.x) + 5, int(self.prevPosition.y) + 5
-        canvas.create_oval(x0, y0, x1, y1, fill='black', width=0)
+    # def undraw(self, canvas: tkinter.Canvas):
+    #     if self.prevPosition is None:
+    #         return
+    #     x0, y0 = int(self.prevPosition.x) - 5, int(self.prevPosition.y) - 5
+    #     x1, y1 = int(self.prevPosition.x) + 5, int(self.prevPosition.y) + 5
+    #     canvas.create_oval(x0, y0, x1, y1, fill='black', width=0)
 
     def draw(self, canvas: tkinter.Canvas):
         if self.position is None:
             return
         x0, y0 = int(self.position.x) - 5, int(self.position.y) - 5
         x1, y1 = int(self.position.x) + 5, int(self.position.y) + 5
-        canvas.create_oval(x0, y0, x1, y1, fill='blue', width=0)
-        canvas.create_line(int(self.position.x), int(self.position.y),
-                           int(self.position.x) + int(self.vector.x),
-                           int(self.position.y) + int(self.vector.y), fill="yellow")
+        if self.canvas_sphere is None:
+            self.canvas_sphere = canvas.create_oval(x0, y0, x1, y1, fill='blue', width=0)
+        if self.canvas_line is not None:
+            canvas.delete(self.canvas_line)
+        self.canvas_line = canvas.create_line(int(self.position.x), int(self.position.y),
+                               int(self.position.x) + int(self.vector.x),
+                               int(self.position.y) + int(self.vector.y), fill="yellow")
+        canvas.coords(self.canvas_sphere, x0, y0, x1, y1)
+
 
 

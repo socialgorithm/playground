@@ -14,6 +14,7 @@ class SimUI:
         self.environment: Environment = Environment(width, height, populationSize*10)
         self.root = tk.Tk()
         self.canvas = tk.Canvas(self.root, height=width, width=height)
+        self.canvas.configure(background='black')
         self.canvas.pack()
         self.population_genome = []
         self.insects = []
@@ -32,8 +33,6 @@ class SimUI:
     def sim(self):
         while True:
             self.environment.simSteps(self.canvas)
-            print("draw done")
-
 
 if __name__ == "__main__":
     sim = SimUI(25)
