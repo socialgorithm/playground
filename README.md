@@ -1,2 +1,2 @@
-# elon-poc
-Proof Of Concept for the Elon platform
+# Playground
+A place to play around with ideas
