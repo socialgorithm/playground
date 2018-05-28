@@ -31,12 +31,10 @@ class SimUI:
 
     def sim(self):
         while True:
-            print("starting draw")
-            self.environment.draw(self.canvas)
+            self.environment.simSteps(self.canvas)
             print("draw done")
-            self.environment.simSteps()
 
 
 if __name__ == "__main__":
-    sim = SimUI(25)
+    sim = SimUI(5)
     sim.run()

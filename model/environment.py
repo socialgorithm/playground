@@ -37,13 +37,12 @@ class Environment:
         self.insects.clear()
         self.insects.extend(insects)
         # setting starting point and vector
-        startingPoint = sy.Point(int(self.width/2),int(self.height/2))
+        startingPoint = sy.Point(int(self.width/2), int(self.height/2))
         for insect in self.insects:
             insect.position = startingPoint
             insect.vector = Vector().setMagDeg(5, random.randrange(0, 360))
 
-    def simSteps(self, num_steps=1, num_threads=4):
-        print("starting updates")
+    def simSteps(self, canvas: tkinter.Canvas, num_steps=1, num_threads=4):
         thread_insect_lists = []
         threads = []
         for num in range(num_threads):
@@ -62,8 +61,7 @@ class Environment:
             thread.start()
         for thread in threads:
             thread.join()
-        print("food remaining: {}".format(len(self.food)))
-        print("all ended")
+        self.draw(canvas)
 
 
     def updateInsects(self, insects: list, num_steps):

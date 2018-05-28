@@ -42,8 +42,8 @@ class Insect:
         for food in food_coords:
             # approximating insect body as a square, cannot use sympy due to bug
             intersects = False
-            if (self.position.x - 5) <= food.x <= (self.position.x + 5):
-                if (self.position.y - 5) <= food.y <= (self.position.y + 5):
+            if (int(self.position.x) - 5) <= food.x <= (int(self.position.x) + 5):
+                if (int(self.position.y) - 5) <= food.y <= (int(self.position.y) + 5):
                     intersects = True
             if intersects:
                 self.fitness += 1
@@ -53,36 +53,49 @@ class Insect:
             food_coords.remove(to_remove)
         # sensors
         sensor_input = [0, 0, 0, 0, 0]
-        SENSOR_RANGE = 30
+        SENSOR_RANGE = 50
         for food in food_coords:
-            delta_x = food.x - self.position.x
-            delta_y = food.y - self.position.y
-            vec_to_food = Vector()
-            vec_to_food.setXY(delta_x, delta_y)
+            delta_x = food.x - int(self.position.x)
+            delta_y = food.y - int(self.position.y)
+            vec_to_food = Vector().setXY(delta_x, delta_y)
+            if vec_to_food is None:
+                continue
             if vec_to_food.mag > SENSOR_RANGE:
                 continue
             angle = self.vector.clockwiseAngleDeg(vec_to_food)
-            sensor_val = SENSOR_RANGE - vec_to_food.mag/SENSOR_RANGE
-            if 270 >= angle < 315:
+            #print("ANGLE: {}".format(angle))
+            sensor_val = SENSOR_RANGE - float(vec_to_food.mag)/SENSOR_RANGE
+            if -90 >= angle < -45.5:
                 sensor_input[0] += sensor_val
-            elif 315 >= angle < 337.5:
+            elif -45.5 >= angle < -22.5:
                 sensor_input[1] += sensor_val
-            elif 337.5 >= angle < 360 or 0 >= angle < 22.5:
+            elif -22.5 >= angle < 0 or 0 >= angle < 22.5:
                 sensor_input[2] += sensor_val
             elif 22.5 >= angle < 45:
                 sensor_input[3] += sensor_val
             elif 45 >= angle < 90:
                 sensor_input[4] += sensor_val
-        # vector
+        # normalize sensor output
+        max_sensor_val = None
+        min_sensor_val = None
+        for val in sensor_input:
+            if max_sensor_val is None or val > max_sensor_val:
+                max_sensor_val = float(val)
+            if min_sensor_val is None or val < min_sensor_val:
+                min_sensor_val = float(val)
+        max_sensor_val -= min_sensor_val
+        for index, val in enumerate(sensor_input):
+            if max_sensor_val == 0:
+                continue
+            sensor_input[index] = (val-min_sensor_val)/max_sensor_val
         steering = self.brain.evaluate(np.array(sensor_input).reshape(1, 5))
         delta_angle = 10*steering
+        #print("Sensor: {} deltaDeg: {}".format([round(val, 1) for val in sensor_input], delta_angle))
         self.vector.addDeg(delta_angle)
         # updating position
         self.prevPosition = self.position
-        try:
-            self.position = Point(self.position.x + self.vector.x, self.position.y + self.vector.y)
-        except:
-            print("error during update")
+        self.position = Point(int(self.position.x) + int(self.vector.x), int(self.position.y) + int(self.vector.y))
+
 
     def undraw(self, canvas: tkinter.Canvas):
         if self.prevPosition is None:

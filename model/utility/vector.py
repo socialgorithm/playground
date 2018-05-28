@@ -13,7 +13,7 @@ class Vector:
     def setXY(self, x, y):
         self.x = x
         self.y = y
-        self.mag = math.sqrt(x**2 + y**2)
+        self.mag = (x**2 + y**2)**(1/2)
         self.rad = math.atan2(y, x)
         self.deg = self.rad * (180/math.pi)
         return self
