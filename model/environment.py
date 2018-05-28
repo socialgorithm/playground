@@ -46,7 +46,7 @@ class Environment:
             insect.position = startingPoint
             insect.vector = Vector().setMagDeg(5, random.randrange(0, 360))
 
-    def simSteps(self, canvas: tkinter.Canvas, num_steps=1, num_threads=4):
+    def simSteps(self, canvas: tkinter.Canvas, num_steps=1, num_threads=8):
         thread_insect_lists = []
         threads = []
         for num in range(num_threads):
@@ -68,6 +68,7 @@ class Environment:
         self.draw(canvas)
         print("Step: {}".format(self.simStep))
         self.simStep += 1
+        return self.simStep
 
 
     def updateInsects(self, insects: list, num_steps):
