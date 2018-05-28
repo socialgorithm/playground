@@ -24,9 +24,10 @@ class Vector:
         elif self.deg < 0:
             self.deg += math.floor(math.fabs(deg)/360)*360
         self.rad = self.deg * (math.pi / 180)
-        self.x = mag * math.cos(deg)
-        self.y = mag * math.sin(deg)
+        self.x = mag * math.cos(self.rad)
+        self.y = mag * math.sin(self.rad)
         return self
 
-    def addDeg(self):
-        raise Exception("Not implemented")
+    def addDeg(self, deg):
+        self.deg += deg
+        self.setMagDeg(self.mag, self.deg)

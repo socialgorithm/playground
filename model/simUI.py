@@ -1,4 +1,5 @@
 import tkinter as tk
+from threading import Thread
 
 from model.environment import Environment
 from model.insect import Insect
@@ -10,7 +11,7 @@ class SimUI:
         self.width = width
         self.height = height
         self.populationSize = populationSize
-        self.environment: Environment = Environment(width, height, 100)
+        self.environment: Environment = Environment(width, height, populationSize*10)
         self.root = tk.Tk()
         self.canvas = tk.Canvas(self.root, height=width, width=height)
         self.canvas.pack()
@@ -24,15 +25,18 @@ class SimUI:
             self.insects.append(Insect(genGenome=True))
         self.population_genome = [insec.genome for insec in self.insects]
         self.environment.setInsects(self.insects)
-        self.nextStep()
+        thread = Thread(target=self.sim)
+        thread.start()
         self.root.mainloop()
 
-    def nextStep(self):
-        self.environment.simSteps()
-        self.environment.draw(self.canvas)
-        self.root.after(1000, self.nextStep)
+    def sim(self):
+        while True:
+            print("starting draw")
+            self.environment.draw(self.canvas)
+            print("draw done")
+            self.environment.simSteps()
 
 
 if __name__ == "__main__":
-    sim = SimUI(100)
+    sim = SimUI(25)
     sim.run()

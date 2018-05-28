@@ -37,12 +37,19 @@ class InsectBrain:
             output_layer_bias = np.array(genome.genes['B_out'].values).reshape(1,1)
             layerout_bias = tf.constant(value=output_layer_bias,dtype=tf.float32)
             layerout_weightedSum = tf.matmul(layerone_out,layerout_weights) + layerout_bias
-            self.layerout_out = tf.nn.relu(layerout_weightedSum)
+            self.layerout_out = layerout_weightedSum
+
 
     def evaluate(self,inputs):
+        value = None
         with self.graph.as_default():
             feed_dict = {self.inputs: inputs}
-            print(self.session.run(fetches=self.layerout_out,feed_dict=feed_dict))
+            value = self.session.run(fetches=self.layerout_out, feed_dict=feed_dict)[0, 0]
+            if value < -1:
+                value = -1
+            elif value > 1:
+                value = 1
+        return value
 
 
 if __name__ == "__main__":
