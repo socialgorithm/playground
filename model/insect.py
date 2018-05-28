@@ -16,7 +16,7 @@ class Insect:
         self.sensorInput = []  # should be fixed size
         self.vector = None
         self.brain: InsectBrain = None
-        self.fitness = 0
+        self.fitness = 1
         self.canvas_sphere = None
         self.canvas_line = None
         # create random genome
@@ -49,10 +49,9 @@ class Insect:
                     intersects = True
             if intersects:
                 self.fitness += 1
-                print("nam nam nam")
                 food_to_remove.append(food)
-        for to_remove in food_to_remove:
-            food_coords.remove(to_remove)
+        # for to_remove in food_to_remove:
+        #     food_coords.remove(to_remove)
         # sensors
         sensor_input = [0, 0, 0, 0, 0]
         SENSOR_RANGE = 50
@@ -65,7 +64,6 @@ class Insect:
             if vec_to_food.mag > SENSOR_RANGE:
                 continue
             angle = self.vector.clockwiseAngleDeg(vec_to_food)
-            #print("ANGLE: {}".format(angle))
             sensor_val = SENSOR_RANGE - float(vec_to_food.mag)/SENSOR_RANGE
             if -90 >= angle < -45.5:
                 sensor_input[0] += sensor_val
@@ -97,14 +95,7 @@ class Insect:
         # updating position
         self.prevPosition = self.position
         self.position = Point(int(self.position.x) + int(self.vector.x), int(self.position.y) + int(self.vector.y))
-
-
-    # def undraw(self, canvas: tkinter.Canvas):
-    #     if self.prevPosition is None:
-    #         return
-    #     x0, y0 = int(self.prevPosition.x) - 5, int(self.prevPosition.y) - 5
-    #     x1, y1 = int(self.prevPosition.x) + 5, int(self.prevPosition.y) + 5
-    #     canvas.create_oval(x0, y0, x1, y1, fill='black', width=0)
+        return food_to_remove
 
     def draw(self, canvas: tkinter.Canvas):
         if self.position is None:

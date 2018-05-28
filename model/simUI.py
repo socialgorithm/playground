@@ -45,12 +45,16 @@ class SimUI:
             # normalise insect fitness
             max_fitness = None
             min_fitness = None
+            average_fitness = 0
             for insect in self.insects:
                 fitness = insect.fitness
+                average_fitness += fitness
                 if max_fitness is None or max_fitness < fitness:
                     max_fitness = fitness
                 if min_fitness is None or min_fitness > fitness:
                     min_fitness = fitness
+            average_fitness /= len(self.insects)
+            print("Average fitness: {}, Max fitness: {}, Min fitness: {}".format(average_fitness, max_fitness, min_fitness))
             max_fitness -= min_fitness
             # select parents based on fitness until enough children have been generated
             fitness_list = []
@@ -93,5 +97,5 @@ class SimUI:
 
 
 if __name__ == "__main__":
-    sim = SimUI(25)
+    sim = SimUI(15)
     sim.run()
