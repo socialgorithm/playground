@@ -1,8 +1,8 @@
 import tkinter as tk
 from threading import Thread
 
-from model.environment import Environment
-from model.insect import Insect
+from model2.car import Car
+from model2.environment import Environment
 
 
 class SimUI:
@@ -11,10 +11,10 @@ class SimUI:
         self.width = width
         self.height = height
         self.populationSize = populationSize
-        self.environment: Environment = Environment(width, height, populationSize*10)
+        self.environment: Environment = Environment(width, height)
         self.root = tk.Tk()
         self.canvas = tk.Canvas(self.root, height=width, width=height)
-        self.canvas.configure(background='black')
+        self.canvas.configure(background='green')
         self.canvas.pack()
         self.population_genome = []
         self.insects = []
@@ -23,9 +23,9 @@ class SimUI:
     def run(self):
         # generating initial population
         for i in range(self.populationSize):
-            self.insects.append(Insect(genGenome=True))
+            self.insects.append(Car(genGenome=True))
         self.population_genome = [insec.genome for insec in self.insects]
-        self.environment.setInsects(self.insects)
+        self.environment.setCars(self.insects)
         thread = Thread(target=self.sim)
         thread.start()
         self.root.mainloop()

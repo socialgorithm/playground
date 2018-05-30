@@ -3,7 +3,7 @@ import tensorflow as tf
 import numpy as np
 
 
-class InsectBrain:
+class CarBrain:
 
     def __init__(self, genome: Genome):
         self.graph = tf.Graph()
@@ -62,15 +62,5 @@ if __name__ == "__main__":
     genome.new_gene(size=5, value_bounds=(-1, 1), name="B_two")
     genome.new_gene(size=5, value_bounds=(-1, 1), name="W_out")
     genome.new_gene(size=1, value_bounds=(-1, 1), name="B_out")
-    brain = InsectBrain(genome)
+    brain = CarBrain(genome)
     brain.evaluate(inputs=np.array([0, 0, 1, 0, 0]).reshape(1, 5))
-
-
-# arr = np.array([0,0,0,1,1,1,2,2,2]).reshape(3,3)
-# arr = np.transpose(arr)
-# inp = np.array([1,1,1]).reshape(1,3)
-# print(inp)
-# print("\n")
-# print(arr)
-# print("\n")
-# print(np.matmul(inp,arr))

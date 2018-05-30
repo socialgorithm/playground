@@ -3,19 +3,19 @@ import tkinter
 import math
 from sympy import *
 import numpy as np
-from model.brain import InsectBrain
 from model.utility.vector import Vector
 from model.genome import Genome
-from random import random as fran
+from model2.brain import CarBrain
 
-class Insect:
+
+class Car:
 
     def __init__(self, genGenome = False):
         self.position = None
         self.prevPosition = None
         self.sensorInput = []  # should be fixed size
         self.vector = None
-        self.brain: InsectBrain = None
+        self.brain: CarBrain = None
         self.fitness = 0
         self.canvas_sphere = None
         self.canvas_line = None
@@ -30,13 +30,13 @@ class Insect:
             self.genome.new_gene(size=5, value_bounds=(-1, 1), name="B_two")
             self.genome.new_gene(size=5, value_bounds=(-1, 1), name="W_out")
             self.genome.new_gene(size=1, value_bounds=(-1, 1), name="B_out")
-            self.brain: InsectBrain = InsectBrain(self.genome)
+            self.brain: CarBrain = CarBrain(self.genome)
         else:
             self.genome = None
 
     def setGenome(self, genome):
         self.genome = genome
-        self.brain: InsectBrain = InsectBrain(genome)
+        self.brain: CarBrain = CarBrain(genome)
 
     def update(self, food_coords: list ):
         # check if intersecting food coordinates
