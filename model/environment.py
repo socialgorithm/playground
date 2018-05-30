@@ -18,9 +18,9 @@ class Environment:
         self.insects = []
         self.generateFood(num_food, width, height)
         self.drawCall = 0
-        self.callsBeforeRefresh = 100
+        self.firstDrawCall = True
         self.food_to_remove = []
-        self.food_canvas_ids = []
+        self.food_canvas_ids = {}
         self.simStep = 0
 
     def generateFood(self, num_food, width, height):
@@ -46,7 +46,7 @@ class Environment:
             insect.position = startingPoint
             insect.vector = Vector().setMagDeg(5, random.randrange(0, 360))
 
-    def simSteps(self, canvas: tkinter.Canvas, num_steps=1, num_threads=4):
+    def simSteps(self, canvas: tkinter.Canvas, num_steps=1, num_threads=8):
         thread_insect_lists = []
         threads = []
         for num in range(num_threads):
@@ -66,26 +66,26 @@ class Environment:
         for thread in threads:
             thread.join()
         self.draw(canvas)
-        print("Step: {}".format(self.simStep))
         self.simStep += 1
+        return self.simStep
 
 
     def updateInsects(self, insects: list, num_steps):
         for step in range(num_steps):
             for index, insect in enumerate(insects):
-                insect.update(self.food)
+                self.food_to_remove.extend(insect.update(self.food))
 
     def draw(self, canvas: tkinter.Canvas):
-        if self.drawCall <= 0:
-            for id in self.food_canvas_ids:
-                canvas.delete(id)
+        if self.firstDrawCall:
+            self.firstDrawCall = False
             for food in self.food:
-                x0, y0 = food.x - 2, food.y - 2
-                x1, y1 = food.x + 2, food.y + 2
-                self.food_canvas_ids.append(canvas.create_oval(x0, y0, x1, y1, fill='green', width=0))
-            self.drawCall = self.callsBeforeRefresh
+                x0, y0 = food.x - 3, food.y - 3
+                x1, y1 = food.x + 3, food.y + 3
+                self.food_canvas_ids[food] = canvas.create_oval(x0, y0, x1, y1, fill='red', width=0)
         else:
-            self.drawCall -= 1
+            for key in self.food_to_remove:
+                canvas.delete(self.food_canvas_ids[key])
+        self.drawCall -= 1
         # for insect in self.insects:
         #     insect.undraw(canvas)
         for insect in self.insects:

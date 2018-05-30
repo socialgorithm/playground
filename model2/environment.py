@@ -14,7 +14,6 @@ class Environment:
         self.width = width
         self.height = height
         self.num_food = num_food
-    
         self.insects = []
         self.generateFood(num_food, width, height)
         self.drawCall = 0
