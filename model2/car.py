@@ -4,7 +4,7 @@ import math
 from sympy import *
 import numpy as np
 from model.utility.vector import Vector
-from model.genome import Genome
+from model2.genome import Genome
 from model2.brain import CarBrain
 
 
@@ -23,7 +23,7 @@ class Car:
         self.tag = tag  # used to identify the car
         # create random genome
         if genGenome:
-            self.genome = Genome()
+            self.genome = Genome(tag)
             self.genome.new_gene(size=25, value_bounds=(-1, 1), name="W_inputs")
             self.genome.new_gene(size=5, value_bounds=(-1, 1), name="B_inputs")
             self.genome.new_gene(size=25, value_bounds=(-1, 1), name="W_one")

@@ -8,7 +8,7 @@ def updateLoop(cars_genome: list, in_queue: Queue, out_queue: Queue, ID):
     print("update process started. ID: {}".format(ID))
     cars = []
     for genome in cars_genome:
-        car = Car("test", genGenome=False)
+        car = Car(genome.tag, genGenome=False)
         car.setGenome(genome)
         cars.append(car)
     while True:

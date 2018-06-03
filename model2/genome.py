@@ -5,10 +5,11 @@ import random
 
 class Genome:
 
-    def __init__(self):
+    def __init__(self, tag):
         self.genes: dict['Gene'] = {}
         self.fitness = None
         self.mutation_rate = 0.05
+        self.tag = tag
 
     def new_gene(self, size: int, value_bounds: tuple, name: str):
         if name in self.genes:
@@ -20,7 +21,8 @@ class Genome:
             sign = 1 if random.random() >= 0.5 else -1
             val = val_midpoint + sign*val_plusminus*random.random()
             new_values.append(val)
-        new_gene = Gene(val_type=float,geneID=name,initial_values=new_values,value_bounds=(value_bounds[0],value_bounds[1]))
+        new_gene = Gene(val_type=float, geneID=name, initial_values=new_values,
+                        value_bounds=(value_bounds[0], value_bounds[1]))
         self.genes[name] = new_gene
 
     def add_gene(self, gene: Gene, name: str):
