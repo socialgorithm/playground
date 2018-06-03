@@ -19,6 +19,7 @@ class Car:
         self.fitness = 0
         self.canvas_sphere = None
         self.canvas_line = None
+        self.track = None
         # create random genome
         if genGenome:
             self.genome = Genome()
@@ -38,45 +39,14 @@ class Car:
         self.genome = genome
         self.brain: CarBrain = CarBrain(genome)
 
-    def update(self, food_coords: list ):
-        # check if intersecting food coordinates
-        food_to_remove = []
-        for food in food_coords:
-            # approximating insect body as a square, cannot use sympy due to bug
-            intersects = False
-            if (int(self.position.x) - 5) <= food.x <= (int(self.position.x) + 5):
-                if (int(self.position.y) - 5) <= food.y <= (int(self.position.y) + 5):
-                    intersects = True
-            if intersects:
-                self.fitness += 1
-                print("nam nam nam")
-                food_to_remove.append(food)
-        for to_remove in food_to_remove:
-            food_coords.remove(to_remove)
+    def update(self, track_coords: list ):
+        # check if car has collided with track
+        if self.track is None:
+            pass
         # sensors
         sensor_input = [0, 0, 0, 0, 0]
         SENSOR_RANGE = 50
-        for food in food_coords:
-            delta_x = food.x - int(self.position.x)
-            delta_y = food.y - int(self.position.y)
-            vec_to_food = Vector().setXY(delta_x, delta_y)
-            if vec_to_food is None:
-                continue
-            if vec_to_food.mag > SENSOR_RANGE:
-                continue
-            angle = self.vector.clockwiseAngleDeg(vec_to_food)
-            #print("ANGLE: {}".format(angle))
-            sensor_val = SENSOR_RANGE - float(vec_to_food.mag)/SENSOR_RANGE
-            if -90 >= angle < -45.5:
-                sensor_input[0] += sensor_val
-            elif -45.5 >= angle < -22.5:
-                sensor_input[1] += sensor_val
-            elif -22.5 >= angle < 0 or 0 >= angle < 22.5:
-                sensor_input[2] += sensor_val
-            elif 22.5 >= angle < 45:
-                sensor_input[3] += sensor_val
-            elif 45 >= angle < 90:
-                sensor_input[4] += sensor_val
+
         # normalize sensor output
         max_sensor_val = None
         min_sensor_val = None
