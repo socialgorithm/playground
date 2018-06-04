@@ -1,4 +1,5 @@
 from sympy import *
+import sympy as sy
 import tkinter as tk
 
 
@@ -57,11 +58,22 @@ class Track:
             segment_outer = Segment2D(prev_outer_point, curr_outer_point)
             self.inner_segments_sympy.append(segment_inner)
             self.outer_segments_sympy.append(segment_outer)
-
+        # creating combined list of all sympy track geometry objects
+        self.track_geometry_segments = []
+        self.track_geometry_segments.extend(self.inner_segments_sympy)
+        self.track_geometry_segments.extend(self.outer_segments_sympy)
         """
         OTHER CLASS ATTRIBUTES:
         """
+
         self.draw_ids_tk = [] # list of IDs of objects drawn to tkinter canvas, used for deleting them when redrawing
+
+    def intersectsWithTrack(self, sympy_object):
+        intersections = []
+        for track_segment in self.track_geometry_segments:
+            intersections.extend(sy.intersection(track_segment, sympy_object))
+        return intersections
+
 
     def draw(self, canvas: tk.Canvas, redraw=False, draw_section_segments=False):
         if len(self.draw_ids_tk) != 0 and not redraw:

@@ -10,9 +10,9 @@ class Vector:
         self.mag = None
         self.rad = None
 
-    def setXY(self, x, y):
-        self.x = int(x)
-        self.y = int(y)
+    def setXY(self, delta_x, delta_y):
+        self.x = int(delta_x)
+        self.y = int(delta_y)
         self.mag = (self.x**2 + self.y**2)**(1/2)
         self.rad = math.atan2(self.y, self.x)
         self.deg = self.rad * (180/math.pi)
@@ -36,6 +36,14 @@ class Vector:
     def addDeg(self, deg):
         self.deg += deg
         self.setMagDeg(self.mag, self.deg)
+
+    def setMag(self, mag):
+        self.setMagDeg(mag, self.deg)
+
+    def clone(self):
+        cloned_vec = Vector()
+        cloned_vec.setXY(self.x, self.y)
+        return cloned_vec
 
     def clockwiseAngleDeg(self, vec2: 'Vector'):
         dot = self.x * vec2.x + self.y * vec2.y  # dot product between [x1, y1] and [x2, y2]

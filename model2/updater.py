@@ -4,20 +4,18 @@ from model2.car import Car
 from model2.track import Track
 
 
-def updateLoop(cars_genome: list, in_queue: Queue, out_queue: Queue, ID):
+def updateLoop(cars_genome: list, track: Track, in_queue: Queue, out_queue: Queue, ID):
     print("update process started. ID: {}".format(ID))
     cars = []
     for genome in cars_genome:
         car = Car(genome.tag, genGenome=False)
         car.setGenome(genome)
+        car.track = track
         cars.append(car)
     while True:
         item = int(in_queue.get(block=True))  # wait for main process to tell us to start
         if item > 0:
-            compute_car_sensor_input(cars)
-            evaluate_car_brain(cars)
-            update_positions(cars)
-            compute_collisions(cars)
+            update(cars)
             evaluate_fitness(cars)
             return_data(cars, out_queue)
             # DEBUG
@@ -27,20 +25,7 @@ def updateLoop(cars_genome: list, in_queue: Queue, out_queue: Queue, ID):
             # kill updater
             break
 
-
-def compute_car_sensor_input(cars: list):
-    pass
-
-
-def evaluate_car_brain(cars: list):
-    pass
-
-
-def update_positions(cars: list):
-    pass
-
-
-def compute_collisions(cars: list):
+def update(cars: list):
     pass
 
 

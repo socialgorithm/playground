@@ -61,7 +61,7 @@ class SimUI:
             cumu_val = 0
             for insect in self.insects:
                 insect.fitness = float(insect.fitness - min_fitness)/max_fitness
-                fitness_list.append((cumu_val,insect.genome))
+                fitness_list.append((cumu_val, insect.genome))
                 cumu_val += insect.fitness
             self.population_genome.clear()
             while len(self.population_genome) < self.populationSize:
