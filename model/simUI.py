@@ -2,8 +2,8 @@ import random
 import tkinter as tk
 from threading import Thread
 
-from model.environment import Environment
-from model.insect import Insect
+from environment import Environment
+from insect import Insect
 
 
 class SimUI:

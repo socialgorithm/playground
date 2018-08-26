@@ -1,5 +1,5 @@
 import unittest
-from model.gene import Gene
+from gene import Gene
 from unittest.mock import patch
 
 
@@ -17,8 +17,8 @@ class TestGene(unittest.TestCase):
         geneE_vals = [0.13, 0.1, 0.52, 0.98, 0.25, 0.65]
         self.geneE = Gene(val_type=str, geneID="test_gene3", initial_values=geneE_vals)
 
-    @patch('model.gene.random.randrange')
-    @patch('model.gene.random.random')
+    @patch('gene.random.randrange')
+    @patch('gene.random.random')
     def test_staticValues_mutation_1(self, mf_random, mf_randrange):
         # setup
         mf_randrange.side_effect = [0, 1, 1, 4]  # specifying swap indicies
@@ -28,8 +28,8 @@ class TestGene(unittest.TestCase):
         self.geneA_u.mutate(0.5)
         self.assertEqual(expected_result, self.geneA_u.values)
 
-    @patch('model.gene.random.randrange')
-    @patch('model.gene.random.random')
+    @patch('gene.random.randrange')
+    @patch('gene.random.random')
     def test_values_mutation_1(self, mf_random, mf_randrange):
         # setup
         mf_randrange.side_effect = [0, 2, 4]  # indices
@@ -42,8 +42,8 @@ class TestGene(unittest.TestCase):
         self.geneD.mutate(0.5)
         self.assertEqual(expected_result, [round(x, 3) for x in self.geneD.values])
 
-    @patch('model.gene.random.randrange')
-    @patch('model.gene.random.random')
+    @patch('gene.random.randrange')
+    @patch('gene.random.random')
     def test_values_mutation_2(self, mf_random, mf_randrange):
         # setup
         mf_randrange.side_effect = [0, 2, 4]  # indices

@@ -3,9 +3,9 @@ import tkinter
 import math
 from sympy import *
 import numpy as np
-from model.brain import InsectBrain
-from model.utility.vector import Vector
-from model.genome import Genome
+from brain import InsectBrain
+from utility.vector import Vector
+from genome import Genome
 from random import random as fran
 
 class Insect:

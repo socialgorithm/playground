@@ -3,8 +3,8 @@ import tkinter
 from threading import Thread
 
 import sympy as sy
-from model.utility.vector import Vector
-from model.insect import Insect
+from utility.vector import Vector
+from insect import Insect
 from sympy.core.cache import *
 
 

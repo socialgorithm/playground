@@ -1,6 +1,6 @@
 import math
 
-from model.gene import Gene
+from gene import Gene
 import random
 
 class Genome:

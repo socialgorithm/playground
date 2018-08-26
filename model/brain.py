@@ -1,4 +1,4 @@
-from model.genome import Genome
+from genome import Genome
 import tensorflow as tf
 import numpy as np
 
